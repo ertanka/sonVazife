@@ -2,45 +2,130 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Super Game :)</title>
+<title id="title">Super Game :)</title>
 </head>
 
 <body onkeypress="basgac(event)" style="background-color:#09F">
-<p id="paragraf">-</p>
+<button id="reset" onClick="restart()">Gene Oyna</button>
 
 </body>
+
 <script type="text/javascript">
+var loc;
+var startLoc;
+var endLoc;
+var activeLayer; //0 lower 1 upper?
+var upperLayer;
+var lowerLayer;
+var address;
+
+getReady();
+
+function getReady(){
+	address=document.location.href;
+	dir=0;
+	startLoc=8;
+	endLoc=103;
+	loc=startLoc;
+	lowerLayer="x";
+	upperLayer="";
+	activeLayer=0;
+	for(var i=0;i<startLoc;i++){
+		upperLayer+=" ";
+	}
+	for(var i=0;i<endLoc-startLoc;i++){
+		upperLayer+="-";
+	}
+	for(var i=0;i<endLoc-startLoc;i++){
+		lowerLayer+="-";
+	}
+	document.getElementById("title").innerHTML=upperLayer;
+	document.location.href=address+"#"+lowerLayer; 
+	playGame();
+}
+
+function playGame(){
+	loc+=dir;
+	dir=0;
+	var temp="";
+	
+	for(var i=0;i<endLoc-startLoc;i++){
+		if(i==(loc-startLoc) && activeLayer==0){
+			temp+="x";
+		}
+		else{
+			temp+="-";
+		}
+	}
+	document.location.href=address+"#"+temp;
+	temp="#";
+	for(var i=0;i<startLoc;i++){
+		temp+="=";
+	}
+	temp+="|";
+	for(var i=0;i<endLoc-startLoc;i++){
+		if(i==loc-startLoc && activeLayer==1){
+			temp+="x";
+		}
+		else{
+			temp+="-";
+		}
+	}
+	document.getElementById("title").innerHTML=temp;
+}
+function restart(){
+	document.location.href=address;
+}
+
 function basgac(evt){
 	if(evt.keyCode!=0){
 		var code=evt.keyCode;
 		if(code==37){
-			//sol bak bu
+			if(loc==startLoc)
+				return;
+			loc--;
 		}
 		if(code==38){
-			//yukariii
+			if(activeLayer==1)
+				return;
+			activeLayer=1;
 		}
 		if(code==39){
-			//saga gittii
+			if(loc==endLoc-1)
+				return;
+			loc++;
 		}
 		if(code==40){
-			//hop assaaa
+			if(activeLayer==0)
+				return;
+			activeLayer=0;
 		}
 	}
 	else{
 		var pressedKey=evt.which;
-		if(keyPressed==97 || keyPressed==65){
-			// A bu 
+		if(pressedKey==97 || pressedKey==65){
+			if(startLoc==0)
+				return;
+			startLoc--;
+			//A burasi unutulmamali
 		}
-		if(keyPressed==119 || keyPressed==87){
+		if(pressedKey==119 || pressedKey==87){
+			endLoc++;
 			// W gibi sanki
 		}
-		if(keyPressed==100 || keyPressed==68){
+		if(pressedKey==100 || pressedKey==68){
+			if(startLoc==endLoc-1)
+				return;
+			startLoc++;
+			endLoc++;
 			// D ki bu
 		}
-		if(keyPressed==105 || keyPressed==83){
+		if(pressedKey==115 || pressedKey==83){
+			endLoc--;
 			// SSSSSS
 		}
 	}
+	playGame();
 
 }
 </script>
