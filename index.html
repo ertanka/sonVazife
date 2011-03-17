@@ -18,6 +18,8 @@ var activeLayer; //0 lower 1 upper?
 var upperLayer;
 var lowerLayer;
 var address;
+var timeToWait;
+var score;
 
 getReady();
 
@@ -30,6 +32,8 @@ function getReady(){
 	lowerLayer="x";
 	upperLayer="";
 	activeLayer=0;
+	timeToWait=200;
+	score=0;
 	for(var i=0;i<startLoc;i++){
 		upperLayer+=" ";
 	}
@@ -40,13 +44,48 @@ function getReady(){
 		lowerLayer+="-";
 	}
 	document.getElementById("title").innerHTML=upperLayer;
-	document.location.href=address+"#"+lowerLayer; 
-	playGame();
+	location.hash=lowerLayer; 
+	gameTimer();
 }
 
-function playGame(){
-	loc+=dir;
-	dir=0;
+function gameTimer(){
+moveEnemies();
+//moveBullets();	
+drawGame();	
+var t=setTimeout("gameTimer()",timeToWait);
+}
+
+function moveEnemies(){
+	upperLayer=moveEnemiesOnLine(upperLayer);
+	lowerLayer=moveEnemiesOnLine(lowerLayer);
+}
+function moveEnemiesOnLine(mapLayer){
+	var temp="";
+	
+	for(var i=1;i<mapLayer.length;i++){
+		if(mapLayer.charAt(i+1)=='-')
+			temp+='e';
+		if(mapLayer.charAt(i-1)=='>'){
+			score+=10;
+			temp+='-';
+		}
+		if(mapLayer.charAt(i)=='x'){
+			gameOver();
+			return "GAME OVER!";
+		}
+		if(mapLayer.charAt(i)=='e' || mapLayer.charAt(i)=='>')
+			temp+='-';
+	}
+	if(Math.random()*10<1)
+		temp+='e';
+	return temp;
+}
+function gameOver(){
+	alert("Oyun bitti.. "+score+" puan yaptiniz :) Baska bisiyler daha yazmali tabii burda oda olur zamanla...");
+}
+
+function initializeMap(){
+	
 	var temp="";
 	
 	for(var i=0;i<endLoc-startLoc;i++){
@@ -57,7 +96,7 @@ function playGame(){
 			temp+="-";
 		}
 	}
-	document.location.href=address+"#"+temp;
+	lowerLayer=temp;
 	temp="#";
 	for(var i=0;i<startLoc;i++){
 		temp+="=";
@@ -71,7 +110,11 @@ function playGame(){
 			temp+="-";
 		}
 	}
-	document.getElementById("title").innerHTML=temp;
+	upperLayer=temp;
+}
+function drawGame(){
+	location.hash=lowerLayer;
+	document.getElementById("title").innerHTML=upperLayer;
 }
 function restart(){
 	document.location.href=address;
@@ -80,7 +123,7 @@ function restart(){
 function basgac(evt){
 	if(evt.keyCode!=0){
 		var code=evt.keyCode;
-		if(code==37){
+		if(code==37){	
 			if(loc==startLoc)
 				return;
 			loc--;
@@ -125,7 +168,7 @@ function basgac(evt){
 			// SSSSSS
 		}
 	}
-	playGame();
+	drawGame();
 
 }
 </script>
