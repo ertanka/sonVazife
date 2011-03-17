@@ -46,15 +46,12 @@ function getReady(){
 		lowerLayer+="-";
 	}
 	document.getElementById("title").innerHTML=upperLayer;
-<<<<<<< HEAD
 	location.hash=lowerLayer; 
 	gameTimer();
-=======
-	document.location.href=address+"#"+lowerLayer; 
+
 	playGame();
 	score = 0;
 	showImage(score);
->>>>>>> bf0f30607ef56b92aedc2641b2e67efd800f8732
 }
 
 function gameTimer(){
@@ -177,16 +174,12 @@ function basgac(evt){
 			// SSSSSS
 		}
 	}
-<<<<<<< HEAD
 	drawGame();
-=======
-	playGame();
 	score++;
 	showImage(score);
 }
 
 function showImage(score) {
->>>>>>> bf0f30607ef56b92aedc2641b2e67efd800f8732
 
 	var monalego = document.getElementById("monaabla").style;
 	monalego.opacity = score/100;
